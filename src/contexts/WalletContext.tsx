@@ -48,6 +48,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         // Handle user rejection gracefully (error code 4001)
         if (error && typeof error === 'object' && 'code' in error && error.code === 4001) {
           console.log('Wallet connection request rejected by user');
+        } else if (error && typeof error === 'object' && 'code' in error && error.code === -32002) {
+          console.warn('Wallet is already processing a request. Please wait.');
         } else {
           console.error('Error checking wallet connection:', error);
         }
