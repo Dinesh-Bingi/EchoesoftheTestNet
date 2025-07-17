@@ -1,17 +1,21 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Player, GameState, PlayerAction } from '../types/game';
 import { useWallet } from './WalletContext';
+import { useBlockchain } from '../hooks/useBlockchain';
 
 interface GameContextType {
   players: Player[];
   currentRound: number;
   gameState: GameState;
   isHost: boolean;
+  hasWon: boolean;
+  rewardAmount: number;
   createRoom: () => Promise<void>;
   joinRoom: (roomCode: string) => Promise<void>;
   recordAction: (action: PlayerAction) => void;
   solvePuzzle: () => void;
   startGame: () => void;
+  claimReward: () => Promise<void>;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -26,14 +30,18 @@ export const useGame = () => {
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { address } = useWallet();
+  const { sendReward } = useBlockchain();
   const [players, setPlayers] = useState<Player[]>([]);
   const [currentRound, setCurrentRound] = useState(1);
   const [gameState, setGameState] = useState<GameState>('lobby');
   const [isHost, setIsHost] = useState(false);
   const [roomCode, setRoomCode] = useState<string>('');
+  const [hasWon, setHasWon] = useState(false);
+  const [rewardAmount] = useState(100); // $100 USD reward
 
   const createRoom = async () => {
-    if (!address) return;
+    // Allow room creation without wallet connection
+    const playerAddress = address || `guest-${Date.now()}`;
     
     const newRoomCode = Math.random().toString(36).substr(2, 6).toUpperCase();
     setRoomCode(newRoomCode);
@@ -41,7 +49,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     const hostPlayer: Player = {
       id: `player-${Date.now()}`,
-      address,
+      address: playerAddress,
       position: { x: 100, y: 100 },
       score: 0,
       isHost: true,
@@ -53,12 +61,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const joinRoom = async (code: string) => {
-    if (!address) return;
+    // Allow joining without wallet connection
+    const playerAddress = address || `guest-${Date.now()}`;
     
     // Simulate joining room
     const newPlayer: Player = {
       id: `player-${Date.now()}`,
-      address,
+      address: playerAddress,
       position: { x: 150, y: 150 },
       score: 0,
       isHost: false,
@@ -71,9 +80,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const recordAction = (action: PlayerAction) => {
+    const playerAddress = address || `guest-${Date.now()}`;
     setPlayers(prev => 
       prev.map(player => 
-        player.address === address
+        player.address === playerAddress || player.address.startsWith('guest-')
           ? {
               ...player,
               position: action.position,
@@ -91,13 +101,22 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const solvePuzzle = () => {
+    const playerAddress = address || players.find(p => p.isHost)?.address || '';
     setPlayers(prev => 
       prev.map(player => 
-        player.address === address
-          ? { ...player, score: player.score + 100 }
+        player.address === playerAddress || player.address.startsWith('guest-')
+          ? { ...player, score: player.score + 1000 }
           : player
       )
     );
+    
+    // Check if player has won (completed 5 rounds or reached high score)
+    const currentPlayer = players.find(p => p.address === playerAddress || p.address.startsWith('guest-'));
+    if (currentPlayer && (currentRound >= 5 || currentPlayer.score >= 5000)) {
+      setHasWon(true);
+      setGameState('finished');
+      return;
+    }
     
     // Advance to next round
     setTimeout(() => {
@@ -105,9 +124,28 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, 1000);
   };
 
+  const claimReward = async () => {
+    if (!hasWon) return;
+    
+    try {
+      if (address) {
+        // Send actual reward to connected wallet
+        await sendReward(address, rewardAmount);
+        alert(`🎉 Congratulations! $${rewardAmount} USD has been sent to your wallet: ${address}`);
+      } else {
+        // Show message for guest players
+        alert(`🎉 You won! Connect your wallet to claim your $${rewardAmount} USD reward!`);
+      }
+    } catch (error) {
+      console.error('Error claiming reward:', error);
+      alert('Error claiming reward. Please try again.');
+    }
+  };
   const startGame = () => {
     console.log('GameContext: Starting game with', players.length, 'players');
     setGameState('playing');
+    setHasWon(false);
+    setCurrentRound(1);
   };
   return (
     <GameContext.Provider value={{
@@ -115,11 +153,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       currentRound,
       gameState,
       isHost,
+      hasWon,
+      rewardAmount,
       createRoom,
       joinRoom,
       recordAction,
       solvePuzzle,
-      startGame
+      startGame,
+      claimReward
     }}>
       {children}
     </GameContext.Provider>

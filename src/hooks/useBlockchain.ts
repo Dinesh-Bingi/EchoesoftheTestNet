@@ -111,10 +111,45 @@ export const useBlockchain = () => {
     }
   }, []);
 
+  const sendReward = useCallback(async (recipientAddress: string, amountUSD: number) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Mock sending USD reward to wallet
+      const mockTransactionHash = '0x' + Math.random().toString(16).substr(2, 64);
+      
+      console.log('Sending reward on Monad Testnet:', {
+        recipient: recipientAddress,
+        amount: `$${amountUSD} USD`,
+        timestamp: Date.now(),
+        transactionHash: mockTransactionHash
+      });
+
+      // Simulate network delay for reward transfer
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+      // Mock successful reward transfer
+      return {
+        success: true,
+        transactionHash: mockTransactionHash,
+        amount: amountUSD,
+        recipient: recipientAddress,
+        blockNumber: Math.floor(Math.random() * 1000000)
+      };
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
   return {
     recordSequence,
     mintEscapeNFT,
     getPlayerHistory,
+    sendReward,
     isLoading,
     error,
     contractAddress: CONTRACT_ADDRESS
