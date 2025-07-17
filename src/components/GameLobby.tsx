@@ -62,14 +62,23 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
 
         {!address ? (
           <div className="text-center">
-            <div className="text-yellow-400 mb-4">
+            <div className="text-red-400 mb-4 animate-pulse">
               <div className="mb-4">
-                <Zap className="inline-block mr-2" size={20} />
-                Connect wallet for rewards or play as guest
+                <Zap className="inline-block mr-2 animate-bounce" size={20} />
+                ⚠️ URGENT: Connect wallet for $100 rewards!
               </div>
               <div className="text-sm text-gray-400">
-                🎁 Winners get $100 USD sent to their wallet!
+                💰 Your coins may be expiring - connect now to secure rewards!
               </div>
+            </div>
+            
+            <div className="space-y-3">
+              <button
+                onClick={handleCreateRoom}
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors"
+              >
+                🎮 Play as Guest (No Rewards)
+              </button>
             </div>
           </div>
         ) : (

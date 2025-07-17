@@ -57,22 +57,26 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const connect = async () => {
     if (isProcessingRef.current) {
+      console.log('Wallet connection already in progress, please wait...');
       return;
     }
     
     if (typeof window !== 'undefined' && window.ethereum) {
       isProcessingRef.current = true;
+      console.log('Attempting to connect wallet...');
       try {
         const accounts = await window.ethereum.request({ 
           method: 'eth_requestAccounts' 
         });
         
         if (accounts.length > 0) {
+          console.log('Wallet connected successfully:', accounts[0]);
           setAddress(accounts[0]);
           setIsConnected(true);
           
           const chainId = await window.ethereum.request({ method: 'eth_chainId' });
           setChainId(parseInt(chainId, 16));
+          console.log('Connected to chain ID:', parseInt(chainId, 16));
         }
       } catch (error) {
         // Handle user rejection gracefully (error code 4001) and already processing (error code -32002)
@@ -82,16 +86,14 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           console.warn('Wallet is already processing a request. Please wait.');
         } else {
           console.error('Error connecting wallet:', error);
+          alert('Failed to connect wallet. Please try again.');
         }
       } finally {
         isProcessingRef.current = false;
       }
     } else {
-      // Mock connection for development
-      const mockAddress = '0x' + Math.random().toString(16).substr(2, 40);
-      setAddress(mockAddress);
-      setIsConnected(true);
-      setChainId(1337); // Mock chain ID
+      alert('No wallet detected. Please install MetaMask or another Web3 wallet.');
+      console.error('No ethereum provider found');
     }
   };
 
