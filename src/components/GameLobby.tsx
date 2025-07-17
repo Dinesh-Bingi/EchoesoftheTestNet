@@ -63,8 +63,13 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
         {!address ? (
           <div className="text-center">
             <div className="text-yellow-400 mb-4">
-              <Zap className="inline-block mr-2" size={20} />
-              Connect your wallet to begin
+              <div className="mb-4">
+                <Zap className="inline-block mr-2" size={20} />
+                Connect wallet for rewards or play as guest
+              </div>
+              <div className="text-sm text-gray-400">
+                🎁 Winners get $100 USD sent to their wallet!
+              </div>
             </div>
           </div>
         ) : (
@@ -156,9 +161,9 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
         <div className="mt-8 text-xs text-gray-500 text-center">
           <div className="mb-2">⚠️ WARNING ⚠️</div>
           <div>
-            Play solo or with friends (1-4 players).
+            Play solo or with friends (1-4 players)
             <br />
-            Your actions will be recorded on the Monad Testnet.
+            Winners receive $100 USD • Connect wallet to claim rewards
           </div>
         </div>
       </motion.div>

@@ -14,7 +14,7 @@ interface GameBoardProps {
 }
 
 const GameBoard: React.FC<GameBoardProps> = ({ onBackToLobby }) => {
-  const { players, currentRound, gameState, recordAction } = useGame();
+  const { players, currentRound, gameState, hasWon, rewardAmount, recordAction, claimReward } = useGame();
   const { address } = useWallet();
   const [playerPosition, setPlayerPosition] = useState<Position>({ x: 100, y: 100 });
   const [ghostPositions, setGhostPositions] = useState<Position[]>([]);
@@ -33,7 +33,8 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBackToLobby }) => {
     setRoundStartTime(Date.now());
     
     // Load ghost positions from previous rounds
-    const currentPlayer = players.find(p => p.address === address);
+    const playerAddress = address || players.find(p => p.isHost)?.address || '';
+    const currentPlayer = players.find(p => p.address === playerAddress || p.address.startsWith('guest-'));
     if (currentPlayer && currentPlayer.pastActions.length > 0) {
       const lastRoundActions = currentPlayer.pastActions[currentPlayer.pastActions.length - 1];
       const ghostTrail = lastRoundActions.map(action => action.position);
@@ -115,6 +116,54 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBackToLobby }) => {
   return (
     <div className="min-h-screen p-4">
       <div className="max-w-4xl mx-auto">
+        {/* Victory Modal */}
+        <AnimatePresence>
+          {hasWon && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+            >
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="bg-gradient-to-br from-green-900 to-black border-2 border-green-400 rounded-lg p-8 max-w-md text-center"
+              >
+                <div className="text-6xl mb-4">🎉</div>
+                <h2 className="text-3xl font-bold text-green-400 mb-4">
+                  VICTORY!
+                </h2>
+                <p className="text-white mb-6">
+                  You've escaped the haunted testnet!
+                </p>
+                <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4 mb-6">
+                  <div className="text-2xl font-bold text-green-400">
+                    ${rewardAmount} USD
+                  </div>
+                  <div className="text-sm text-green-300">
+                    Reward Available
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <button
+                    onClick={claimReward}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-colors"
+                  >
+                    Claim Reward
+                  </button>
+                  <button
+                    onClick={onBackToLobby}
+                    className="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg transition-colors"
+                  >
+                    Back to Lobby
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <motion.button
@@ -174,18 +223,21 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBackToLobby }) => {
               <Player
                 position={playerPosition}
                 isCurrentPlayer={true}
-                playerId={address || ''}
+                playerId={address || 'Guest'}
               />
 
               {/* Other Players */}
               {players
-                .filter(p => p.address !== address)
+                .filter(p => {
+                  const playerAddress = address || players.find(p => p.isHost)?.address || '';
+                  return p.address !== playerAddress && !p.address.startsWith('guest-');
+                })
                 .map(player => (
                   <Player
                     key={player.id}
                     position={player.position}
                     isCurrentPlayer={false}
-                    playerId={player.address}
+                    playerId={player.address.startsWith('guest-') ? 'Guest' : player.address}
                   />
                 ))}
 
@@ -225,13 +277,16 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBackToLobby }) => {
                   <div
                     key={player.id}
                     className={`flex items-center justify-between text-sm p-2 rounded ${
-                      player.address === address 
+                      player.address === address || player.address.startsWith('guest-')
                         ? 'bg-green-500/20 text-green-400' 
                         : 'bg-gray-800/50 text-gray-300'
                     }`}
                   >
                     <span>
-                      {player.address.slice(0, 6)}...{player.address.slice(-4)}
+                      {player.address.startsWith('guest-') 
+                        ? 'Guest Player' 
+                        : `${player.address.slice(0, 6)}...${player.address.slice(-4)}`
+                      }
                     </span>
                     <span className="text-xs">
                       {player.score} pts
@@ -249,7 +304,9 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBackToLobby }) => {
               </h3>
               <div className="text-sm text-gray-300 space-y-1">
                 <div>Ghosts: {ghostPositions.length}</div>
-                <div>Actions recorded: {/* Add action count */}</div>
+                <div className="text-green-400">
+                  Win Reward: ${rewardAmount} USD
+                </div>
                 <div className="text-yellow-400">
                   Solve the puzzle to escape!
                 </div>
