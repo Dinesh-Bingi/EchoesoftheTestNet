@@ -24,10 +24,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [chainId, setChainId] = useState<number | null>(null);
   const isProcessingRef = useRef(false);
 
-  useEffect(() => {
-    checkConnection();
-  }, []);
-
   const checkConnection = async () => {
     if (isProcessingRef.current) {
       return;
