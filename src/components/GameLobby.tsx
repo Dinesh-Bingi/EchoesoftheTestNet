@@ -15,8 +15,9 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
   const [showJoinForm, setShowJoinForm] = useState(false);
 
   const handleCreateRoom = async () => {
-    if (!address) return;
+    console.log('handleCreateRoom called, address:', address);
     await createRoom();
+    console.log('Room creation completed');
   };
 
   const handleJoinRoom = async () => {
@@ -66,9 +67,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
             
             <div className="space-y-3">
               <button
-                onClick={async () => {
-                  await createRoom();
-                }}
+                onClick={handleCreateRoom}
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors"
               >
                 🎮 Play as Guest (No Rewards)

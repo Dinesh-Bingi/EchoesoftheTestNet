@@ -40,10 +40,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [rewardAmount] = useState(100); // $100 USD reward
 
   const createRoom = async () => {
-    // Allow room creation without wallet connection
+    console.log('Creating room for guest player...');
     const playerAddress = address || `guest-${Date.now()}`;
     
     const newRoomCode = Math.random().toString(36).substr(2, 6).toUpperCase();
+    console.log('Generated room code:', newRoomCode);
     setRoomCode(newRoomCode);
     setIsHost(true);
     
@@ -56,8 +57,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       pastActions: []
     };
     
+    console.log('Created host player:', hostPlayer);
     setPlayers([hostPlayer]);
     setGameState('lobby');
+    console.log('Room created successfully');
   };
 
   const joinRoom = async (code: string) => {
