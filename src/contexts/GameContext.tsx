@@ -40,13 +40,15 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [rewardAmount] = useState(100); // $100 USD reward
 
   const createRoom = async () => {
-    console.log('Creating room for guest player...');
+    console.log('🏠 GameContext: createRoom function called');
     const playerAddress = address || `guest-${Date.now()}`;
+    console.log('🆔 Generated player address:', playerAddress);
     
     const newRoomCode = Math.random().toString(36).substr(2, 6).toUpperCase();
-    console.log('Generated room code:', newRoomCode);
+    console.log('🔑 Generated room code:', newRoomCode);
     setRoomCode(newRoomCode);
     setIsHost(true);
+    console.log('👑 Set as host: true');
     
     const hostPlayer: Player = {
       id: `player-${Date.now()}`,
@@ -57,10 +59,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       pastActions: []
     };
     
-    console.log('Created host player:', hostPlayer);
+    console.log('👤 Created host player:', hostPlayer);
     setPlayers([hostPlayer]);
+    console.log('📝 Updated players array');
     setGameState('lobby');
-    console.log('Room created successfully');
+    console.log('🎮 Set gameState to lobby');
+    console.log('✅ GameContext: Room created successfully');
   };
 
   const joinRoom = async (code: string) => {

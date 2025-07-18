@@ -15,9 +15,18 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
   const [showJoinForm, setShowJoinForm] = useState(false);
 
   const handleCreateRoom = async () => {
-    console.log('handleCreateRoom called, address:', address);
+    console.log('🎮 BUTTON CLICKED: handleCreateRoom called');
+    console.log('📍 Current address:', address);
+    console.log('👥 Current players:', players);
+    console.log('🎯 Current gameState:', gameState);
+    
+    try {
     await createRoom();
-    console.log('Room creation completed');
+      console.log('✅ Room creation completed successfully');
+      console.log('👥 Players after creation:', players);
+    } catch (error) {
+      console.error('❌ Error creating room:', error);
+    }
   };
 
   const handleJoinRoom = async () => {
