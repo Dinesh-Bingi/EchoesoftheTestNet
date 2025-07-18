@@ -31,10 +31,10 @@ const WalletConnection: React.FC = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={connect}
-            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg flex items-center space-x-2 transition-colors pulse-glow"
+            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl flex items-center space-x-2 transition-all duration-300 shadow-lg"
           >
             <Wallet size={20} />
-            <span>🚀 Connect Wallet</span>
+            <span>Connect Wallet</span>
           </motion.button>
         ) : (
           <motion.div

@@ -170,18 +170,18 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBackToLobby }) => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={onBackToLobby}
-            className="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
+            className="flex items-center space-x-2 bg-gray-800/80 hover:bg-gray-700/80 text-white px-5 py-3 rounded-xl transition-all duration-300 backdrop-blur-sm border border-gray-700/50"
           >
             <ArrowLeft size={20} />
             <span>Back to Lobby</span>
           </motion.button>
 
           <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-2 text-purple-400">
+            <div className="flex items-center space-x-2 text-blue-400 bg-blue-500/10 px-3 py-2 rounded-lg">
               <Users size={20} />
               <span>{players.length} Players</span>
             </div>
-            <div className="flex items-center space-x-2 text-green-400">
+            <div className="flex items-center space-x-2 text-purple-400 bg-purple-500/10 px-3 py-2 rounded-lg">
               <Target size={20} />
               <span>Round {currentRound}</span>
             </div>

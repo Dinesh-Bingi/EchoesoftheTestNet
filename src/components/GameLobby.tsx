@@ -41,20 +41,12 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
       >
         <div className="text-center mb-8">
           <motion.div
-            animate={{ 
-              textShadow: [
-                '0 0 10px #00ff41',
-                '0 0 20px #00ff41',
-                '0 0 10px #00ff41'
-              ]
-            }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="text-4xl font-bold text-green-400 mb-2"
+            className="text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4"
           >
-            <Skull className="inline-block mr-2" size={40} />
+            <Skull className="inline-block mr-3 text-purple-400" size={48} />
             ECHOES
           </motion.div>
-          <div className="text-lg text-purple-300">OF THE TESTNET</div>
+          <div className="text-xl text-gray-300 font-medium">OF THE TESTNET</div>
           <div className="text-sm text-gray-400 mt-2">
             Escape the haunted smart contract
           </div>
@@ -83,18 +75,21 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="bg-gray-800/50 rounded-lg p-4">
-              <div className="flex items-center text-green-400 mb-2">
+            <div className="bg-gray-800/70 backdrop-blur-sm rounded-xl p-5 border border-gray-700/50">
+              <div className="flex items-center text-blue-400 mb-3">
                 <Users className="mr-2" size={20} />
-                Players ({players.length}/4) {players.length === 1 ? '• Solo Mode' : ''}
+                <span className="font-semibold">Players ({players.length}/4)</span>
+                {players.length === 1 && <span className="ml-2 text-purple-400">• Solo Mode</span>}
               </div>
               <div className="space-y-2">
                 {players.map((player, index) => (
-                  <div key={player.id} className="flex items-center justify-between text-sm">
+                  <div key={player.id} className="flex items-center justify-between text-sm bg-gray-700/50 rounded-lg p-3">
                     <span className="text-gray-300">
                       {player.address.slice(0, 6)}...{player.address.slice(-4)}
                     </span>
-                    <span className="text-purple-400">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      player.isHost ? 'bg-blue-500/20 text-blue-400' : 'bg-purple-500/20 text-purple-400'
+                    }`}>
                       {player.isHost ? 'HOST' : 'PLAYER'}
                     </span>
                   </div>
@@ -106,14 +101,14 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
               <div className="space-y-3">
                 <button
                   onClick={handleCreateRoom}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors"
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg"
                 >
                   Create Haunted Room
                 </button>
                 
                 <button
                   onClick={() => setShowJoinForm(!showJoinForm)}
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg transition-colors"
+                  className="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-xl transition-all duration-300 border border-gray-600"
                 >
                   Join Existing Room
                 </button>
@@ -129,11 +124,11 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
                       placeholder="Enter room code..."
                       value={roomCode}
                       onChange={(e) => setRoomCode(e.target.value)}
-                      className="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:border-green-500 focus:outline-none"
+                      className="w-full bg-gray-800/80 border border-gray-600 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors"
                     />
                     <button
                       onClick={handleJoinRoom}
-                      className="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 rounded-lg transition-colors"
+                      className="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-xl transition-colors"
                     >
                       Join Room
                     </button>
@@ -152,7 +147,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
                  console.log('Starting game with', players.length, 'players');
                  handleStartGame();
                }}
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-lg transition-colors flex items-center justify-center"
+                className="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-bold py-4 rounded-xl transition-all duration-300 flex items-center justify-center shadow-lg"
               >
                 <Play className="mr-2" size={20} />
                 BEGIN THE NIGHTMARE
@@ -160,7 +155,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
             )}
 
             {!isHost && players.length >= 1 && (
-              <div className="text-center text-yellow-400">
+              <div className="text-center text-blue-400 bg-blue-500/10 rounded-xl p-4 border border-blue-500/20">
                 Waiting for host to start the game...
               </div>
             )}
@@ -168,11 +163,11 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
         )}
 
         <div className="mt-8 text-xs text-gray-500 text-center">
-          <div className="mb-2">⚠️ WARNING ⚠️</div>
+          <div className="mb-2 text-yellow-400 font-semibold">⚠️ GAME INFO ⚠️</div>
           <div>
             Play solo or with friends (1-4 players)
             <br />
-            Winners receive $100 USD • Connect wallet to claim rewards
+            <span className="text-green-400 font-medium">Winners receive $100 USD</span> • Connect wallet to claim rewards
           </div>
         </div>
       </motion.div>
