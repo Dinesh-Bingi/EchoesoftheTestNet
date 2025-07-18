@@ -41,13 +41,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const createRoom = async () => {
     console.log('🏠 GameContext: createRoom function called');
-    const playerAddress = address || `guest-${Date.now()}`;
+    // Create guest ID if no wallet connected
+    const playerAddress = address || `guest-${Math.random().toString(36).substr(2, 8)}`;
     console.log('🆔 Generated player address:', playerAddress);
     
     const newRoomCode = Math.random().toString(36).substr(2, 6).toUpperCase();
     console.log('🔑 Generated room code:', newRoomCode);
     setRoomCode(newRoomCode);
-    setIsHost(true);
+    setIsHost(true); // Guest becomes host of their own room
     console.log('👑 Set as host: true');
     
     const hostPlayer: Player = {
@@ -61,9 +62,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     console.log('👤 Created host player:', hostPlayer);
     setPlayers([hostPlayer]);
-    console.log('📝 Updated players array');
     setGameState('lobby');
-    console.log('🎮 Set gameState to lobby');
     console.log('✅ GameContext: Room created successfully');
   };
 
@@ -140,8 +139,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await sendReward(address, rewardAmount);
         alert(`🎉 Congratulations! $${rewardAmount} USD has been sent to your wallet: ${address}`);
       } else {
-        // Show message for guest players
-        alert(`🎉 You won! Connect your wallet to claim your $${rewardAmount} USD reward!`);
+        // Show message for guest players (no rewards)
+        alert(`🎉 You won as a guest! Connect your wallet next time to claim $${rewardAmount} USD rewards!`);
       }
     } catch (error) {
       console.error('Error claiming reward:', error);

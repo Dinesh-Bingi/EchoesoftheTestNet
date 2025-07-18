@@ -16,16 +16,22 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
 
   const handleCreateRoom = async () => {
     console.log('🎮 BUTTON CLICKED: handleCreateRoom called');
-    console.log('📍 Current address:', address);
-    console.log('👥 Current players:', players);
-    console.log('🎯 Current gameState:', gameState);
     
     try {
-    await createRoom();
+      await createRoom();
       console.log('✅ Room creation completed successfully');
-      console.log('👥 Players after creation:', players);
     } catch (error) {
       console.error('❌ Error creating room:', error);
+    }
+  };
+
+  const handlePlayAsGuest = async () => {
+    console.log('🎮 GUEST BUTTON CLICKED: Playing as guest');
+    try {
+      await createRoom();
+      console.log('✅ Guest room created successfully');
+    } catch (error) {
+      console.error('❌ Error creating guest room:', error);
     }
   };
 
@@ -76,7 +82,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
             
             <div className="space-y-3">
               <button
-                onClick={handleCreateRoom}
+                onClick={handlePlayAsGuest}
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors"
               >
                 🎮 Play as Guest (No Rewards)
