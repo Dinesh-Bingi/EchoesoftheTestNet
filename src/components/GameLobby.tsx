@@ -9,7 +9,7 @@ interface GameLobbyProps {
 }
 
 const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
-  const { players, isHost, createRoom, joinRoom, startGame } = useGame();
+  const { players, isHost, createRoom, joinRoom, startGame, gameState } = useGame();
   const { address } = useWallet();
   const [roomCode, setRoomCode] = useState('');
   const [showJoinForm, setShowJoinForm] = useState(false);
