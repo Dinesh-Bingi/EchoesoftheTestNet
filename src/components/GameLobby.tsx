@@ -26,12 +26,17 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
   };
 
   const handlePlayAsGuest = async () => {
-    console.log('🎮 GUEST BUTTON CLICKED: Playing as guest');
+    console.log('🎮 GUEST BUTTON CLICKED: Starting guest play process');
+    console.log('📊 Current state before guest play:', { players: players.length, gameState });
+    
     try {
+      console.log('🏠 Calling createRoom for guest...');
       await createRoom();
-      console.log('✅ Guest room created successfully');
+      console.log('✅ Guest room created successfully, checking state...');
+      console.log('📊 State after createRoom:', { players: players.length, gameState });
     } catch (error) {
       console.error('❌ Error creating guest room:', error);
+      alert('Failed to create guest room. Please try again.');
     }
   };
 

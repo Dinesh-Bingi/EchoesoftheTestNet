@@ -41,6 +41,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const createRoom = async () => {
     console.log('🏠 GameContext: createRoom function called');
+    console.log('📊 Current players before create:', players);
+    console.log('🆔 Address from wallet:', address);
+    
     // Create guest ID if no wallet connected
     const playerAddress = address || `guest-${Math.random().toString(36).substr(2, 8)}`;
     console.log('🆔 Generated player address:', playerAddress);
@@ -61,9 +64,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
     
     console.log('👤 Created host player:', hostPlayer);
+    console.log('🔄 Setting players state...');
     setPlayers([hostPlayer]);
+    console.log('🎮 Setting game state to lobby...');
     setGameState('lobby');
     console.log('✅ GameContext: Room created successfully');
+    console.log('📊 Final state:', { playersLength: 1, gameState: 'lobby', isHost: true });
   };
 
   const joinRoom = async (code: string) => {
