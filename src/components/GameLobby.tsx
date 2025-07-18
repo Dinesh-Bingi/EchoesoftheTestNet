@@ -66,7 +66,9 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
             
             <div className="space-y-3">
               <button
-                onClick={handleCreateRoom}
+                onClick={async () => {
+                  await createRoom();
+                }}
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors"
               >
                 🎮 Play as Guest (No Rewards)
