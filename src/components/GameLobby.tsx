@@ -30,21 +30,6 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
     console.log('📊 Current state before guest play:', { players: players.length, gameState });
     
     try {
-      console.log('🏠 Calling createRoom for guest...');
-      await createRoom();
-      console.log('✅ Guest room created successfully, checking state...');
-      console.log('📊 State after createRoom:', { players: players.length, gameState });
-    } catch (error) {
-      console.error('❌ Error creating guest room:', error);
-      alert('Failed to create guest room. Please try again.');
-    }
-  };
-
-  const handleJoinRoom = async () => {
-    if (!address || !roomCode) return;
-    await joinRoom(roomCode);
-  };
-
   const handleStartGame = () => {
     console.log('handleStartGame called with', players.length, 'players');
     if (players.length >= 1) {
@@ -83,15 +68,6 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
               <div className="text-sm text-gray-400">
                 💰 Your coins may be expiring - connect now to secure rewards!
               </div>
-            </div>
-            
-            <div className="space-y-3">
-              <button
-                onClick={handlePlayAsGuest}
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors"
-              >
-                🎮 Play as Guest (No Rewards)
-              </button>
             </div>
           </div>
         ) : (
