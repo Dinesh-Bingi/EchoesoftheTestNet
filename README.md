@@ -20,10 +20,11 @@ Players find themselves trapped in a haunted smart contract where their previous
 
 - **Frontend**: React + TypeScript + Vite
 - **Styling**: Tailwind CSS + Framer Motion
-- **Multiplayer**: Multisynq for real-time synchronization
-- **Blockchain**: Ethers.js for Monad Testnet integration
+- **Multiplayer**: Multisynq for decentralized real-time synchronization
+- **Blockchain**: Monad Testnet (Chain ID: 10143) with Ethers.js
 - **State Management**: React Context API
 - **Animations**: Framer Motion + Custom CSS animations
+- **Payment Systems**: Stripe, PayPal, Bank Transfers, USDC/USDT
 
 ## 🎮 How to Play
 
@@ -53,8 +54,16 @@ npm run build
 For production deployment, you'll need to set up:
 
 ```env
+# Multisynq Real-time Multiplayer
+VITE_MULTISYNQ_API_KEY=your_multisynq_api_key_here
+
+# Monad Testnet Blockchain
 VITE_MONAD_RPC_URL=https://monad-testnet-rpc.com
 VITE_CONTRACT_ADDRESS=0x742d35Cc6634C0532925a3b8D4d35F4e4dF50aB6
+
+# Payment Systems
+VITE_STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_key
+PAYPAL_CLIENT_ID=your_paypal_client_id
 ```
 
 ## 🎨 Game Mechanics
@@ -75,10 +84,11 @@ VITE_CONTRACT_ADDRESS=0x742d35Cc6634C0532925a3b8D4d35F4e4dF50aB6
 - **Progressive Difficulty**: Puzzles become more challenging with each round
 
 ### Blockchain Integration
-- **Action Recording**: Every move is hashed and stored on-chain
-- **Sequence Verification**: Only correct sequences allow progression
-- **NFT Minting**: Winners can mint commemorative NFTs
-- **Testnet Support**: Fully integrated with Monad Testnet
+- **Monad Testnet Integration**: All actions recorded on high-performance blockchain
+- **Real-time Sync**: Multisynq enables serverless multiplayer coordination
+- **On-chain Verification**: Puzzle solutions verified on Monad blockchain
+- **NFT Rewards**: Mint "Loopbreaker NFTs" for successful escapes
+- **Fast & Cheap**: Monad's EVM-compatible, low-cost transactions
 
 ## 🎯 Scoring System
 
@@ -114,7 +124,8 @@ Successfully escaping the haunted contract allows you to mint a "Loopbreaker NFT
 
 The game is designed to be deployed on:
 - **Vercel**: For frontend hosting
-- **Monad Testnet**: For blockchain interactions
+- **Monad Testnet**: For blockchain interactions (Chain ID: 10143)
+- **Multisynq**: For decentralized multiplayer synchronization
 - **IPFS**: For NFT metadata storage
 
 ## 📱 Mobile Support
@@ -127,8 +138,9 @@ The game is designed to be deployed on:
 
 - **Hidden Sequences**: Secret puzzle solutions for bonus points
 - **Glitch Messages**: Hidden text appears during screen distortions
-- **Matrix References**: Subtle nods to cyberpunk culture
+- **Blockchain References**: Subtle nods to Web3 culture
 - **Developer Messages**: Hidden console logs for curious players
+- **Multisynq Magic**: Real-time ghost synchronization across players
 
 ## 🤝 Contributing
 
@@ -141,6 +153,15 @@ The game is designed to be deployed on:
 ## 📄 License
 
 MIT License - Feel free to use this code for your own spooky blockchain games!
+
+## 🏆 Mission 6 Compliance
+
+✅ **Open Source**: MIT License, full source available
+✅ **Novel Multisynq Use**: Real-time ghost echo synchronization across players
+✅ **Monad Testnet Integration**: All puzzle solutions recorded on-chain
+✅ **Creative & Silly**: Spooky blockchain horror theme with ghost mechanics
+✅ **Real-time Multiplayer**: Serverless coordination via Multisynq
+✅ **EVM Compatible**: Smart contracts on Monad Testnet
 
 ## 🎮 Live Demo
 
