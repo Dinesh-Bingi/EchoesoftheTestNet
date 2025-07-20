@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import { ethers } from 'ethers';
 import { useWallet } from '../contexts/WalletContext';
+import { paymentService } from '../services/PaymentService';
 
 export const useBlockchain = () => {
   const { address, isConnected } = useWallet();
@@ -12,43 +12,42 @@ export const useBlockchain = () => {
 
   const recordSequence = useCallback(async (sequence: number[]) => {
     if (!isConnected || !address) {
-      console.log('No wallet connected - puzzle solved but no reward sent');
-      return { success: false, message: 'No wallet connected' };
+      throw new Error('Wallet not connected');
     }
 
     setIsLoading(true);
     setError(null);
 
     try {
-      // Send real USD reward for puzzle solving
       const rewardAmount = 25; // $25 USD per puzzle
-      const mockTransactionHash = '0x' + Math.random().toString(16).substr(2, 64);
+      const description = `Echoes of the Testnet - Puzzle Solved (Round ${sequence.join('')})`;
       
-      console.log('🎉 SENDING REAL USD REWARD:', {
+      console.log('💰 SENDING REAL USD REWARD:', {
         player: address,
         sequence: sequence,
         rewardAmount: `$${rewardAmount} USD`,
-        timestamp: Date.now(),
-        transactionHash: mockTransactionHash
+        timestamp: Date.now()
       });
 
-      // Simulate sending real USD to wallet
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // In production, this would integrate with:
-      // - Stripe for USD payments
-      // - PayPal API
-      // - Bank transfer API
-      // - Stablecoin transfer (USDC/USDT)
+      // Try multiple payment methods automatically
+      const result = await paymentService.sendOptimalPayment(
+        address,
+        '', // Email can be added later
+        rewardAmount,
+        description
+      );
 
-      // Mock successful USD transfer
-      return {
-        success: true,
-        transactionHash: mockTransactionHash,
-        blockNumber: Math.floor(Math.random() * 1000000),
-        rewardAmount: rewardAmount,
-        message: `$${rewardAmount} USD sent successfully!`
-      };
+      if (result.success) {
+        return {
+          success: true,
+          transactionHash: result.transactionId,
+          rewardAmount: rewardAmount,
+          method: result.method,
+          message: `$${rewardAmount} USD sent via ${result.method}!`
+        };
+      } else {
+        throw new Error('Payment failed');
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       setError(errorMessage);
@@ -126,27 +125,23 @@ export const useBlockchain = () => {
     setError(null);
 
     try {
-      // Mock sending USD reward to wallet
-      const mockTransactionHash = '0x' + Math.random().toString(16).substr(2, 64);
+      const description = `Echoes of the Testnet - Game Reward`;
       
-      console.log('Sending reward on Monad Testnet:', {
+      console.log('💸 Sending game reward:', {
         recipient: recipientAddress,
         amount: `$${amountUSD} USD`,
-        timestamp: Date.now(),
-        transactionHash: mockTransactionHash
+        timestamp: Date.now()
       });
 
-      // Simulate network delay for reward transfer
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Send real USD reward
+      const result = await paymentService.sendOptimalPayment(
+        recipientAddress,
+        '', // Email optional
+        amountUSD,
+        description
+      );
 
-      // Mock successful reward transfer
-      return {
-        success: true,
-        transactionHash: mockTransactionHash,
-        amount: amountUSD,
-        recipient: recipientAddress,
-        blockNumber: Math.floor(Math.random() * 1000000)
-      };
+      return result;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       setError(errorMessage);
@@ -155,6 +150,7 @@ export const useBlockchain = () => {
       setIsLoading(false);
     }
   }, []);
+
   return {
     recordSequence,
     mintEscapeNFT,

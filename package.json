@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@paypal/checkout-server-sdk": "^1.0.3",
+    "@stripe/stripe-js": "^2.4.0",
+    "ethers": "^6.9.2",
+    "@paypal/checkout-server-sdk": "^1.0.3",
     "ethers": "^6.15.0",
     "framer-motion": "^12.23.6",
     "lucide-react": "^0.344.0",
