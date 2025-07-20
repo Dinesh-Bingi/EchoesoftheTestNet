@@ -44,19 +44,19 @@ const Puzzle: React.FC = () => {
 
   const checkSequence = async (seq: number[]) => {
     const correct = JSON.stringify(seq) === JSON.stringify(targetSequence);
-    
-          // Send real USD reward immediately
-          const result = await recordSequence(seq);
-          
-          if (result.success) {
-            alert(`🎉 PUZZLE SOLVED!\n\n💰 $${result.rewardAmount} USD sent to your wallet via ${result.method}!\n\nTransaction ID: ${result.transactionHash}`);
-          }
-        } else {
-          console.error('Error sending reward:', error);
-          alert(`❌ Puzzle solved but payment failed: ${error.message}\nPlease contact support with your wallet address.`);
+    setIsCorrect(correct);
+
+    if (correct) {
+      try {
+        // Send real USD reward immediately
+        const result = await recordSequence(seq);
+        
+        if (result.success) {
+          alert(`🎉 PUZZLE SOLVED!\n\n💰 $${result.rewardAmount} USD sent to your wallet via ${result.method}!\n\nTransaction ID: ${result.transactionHash}`);
         }
       } catch (error) {
-        console.error('Error processing reward:', error);
+        console.error('Error sending reward:', error);
+        alert(`❌ Puzzle solved but payment failed: ${error.message}\nPlease contact support with your wallet address.`);
       }
       
       setTimeout(() => {
