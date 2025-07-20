@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Player, GameState, PlayerAction } from '../types/game';
 import { useWallet } from './WalletContext';
 import { useBlockchain } from '../hooks/useBlockchain';
+import { multisynqService } from '../services/MultisynqService';
+import { monadService } from '../services/MonadTestnetService';
 
 interface GameContextType {
   players: Player[];
@@ -48,7 +50,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const playerAddress = address || `guest-${Math.random().toString(36).substr(2, 8)}`;
     console.log('🆔 Generated player address:', playerAddress);
     
-    const newRoomCode = Math.random().toString(36).substr(2, 6).toUpperCase();
+    // Create Multisynq room for real-time multiplayer
+    const newRoomCode = await multisynqService.createRoom(playerAddress);
     console.log('🔑 Generated room code:', newRoomCode);
     setRoomCode(newRoomCode);
     setIsHost(true); // Guest becomes host of their own room
@@ -76,6 +79,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Allow joining without wallet connection
     const playerAddress = address || `guest-${Date.now()}`;
     
+    // Join Multisynq room
+    await multisynqService.joinRoom(code, playerAddress);
+    
     // Simulate joining room
     const newPlayer: Player = {
       id: `player-${Date.now()}`,
@@ -93,6 +99,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const recordAction = (action: PlayerAction) => {
     const playerAddress = address || `guest-${Date.now()}`;
+    
+    // Sync with Multisynq for real-time multiplayer
+    multisynqService.syncPlayerMovement(action.position, action);
+    
     setPlayers(prev => 
       prev.map(player => 
         player.address === playerAddress || player.address.startsWith('guest-')
@@ -114,6 +124,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const solvePuzzle = () => {
     const playerAddress = address || players.find(p => p.isHost)?.address || '';
+    
+    // Record on Monad Testnet blockchain
+    if (address) {
+      monadService.recordPlayerAction(address, [1, 2, 3, 4], currentRound);
+      multisynqService.syncPuzzleSolution([1, 2, 3, 4], currentRound);
+    }
+    
     setPlayers(prev => 
       prev.map(player => 
         player.address === playerAddress || player.address.startsWith('guest-')
@@ -143,6 +160,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (address) {
         // Send actual reward to connected wallet
         await sendReward(address, rewardAmount);
+        
+        // Mint NFT on Monad Testnet
+        await monadService.mintEscapeNFT(address, currentRound, 5000);
+        
         alert(`🎉 Congratulations! $${rewardAmount} USD has been sent to your wallet: ${address}`);
       } else {
         // Show message for guest players (no rewards)

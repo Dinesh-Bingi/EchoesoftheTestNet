@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Clock, Zap, Target, Users } from 'lucide-react';
 import { useGame } from '../contexts/GameContext';
 import { useWallet } from '../contexts/WalletContext';
+import { multisynqService } from '../services/MultisynqService';
+import { monadService } from '../services/MonadTestnetService';
 import Player from './Player';
 import Ghost from './Ghost';
 import Puzzle from './Puzzle';
@@ -31,6 +33,9 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBackToLobby }) => {
     // Reset position at start of new round
     setPlayerPosition({ x: 100, y: 100 });
     setRoundStartTime(Date.now());
+    
+    // Sync ghost positions with Multisynq
+    multisynqService.syncGhostPositions(ghostPositions);
     
     // Load ghost positions from previous rounds
     const playerAddress = address || players.find(p => p.isHost)?.address || '';
@@ -77,6 +82,9 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBackToLobby }) => {
           timestamp: Date.now() - roundStartTime
         };
         recordAction(action);
+        
+        // Sync movement with other players via Multisynq
+        multisynqService.syncPlayerMovement(newPosition, action);
 
         // Check collision with ghosts
         const collision = ghostPositions.some(ghostPos => {
