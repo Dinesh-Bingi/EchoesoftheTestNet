@@ -188,7 +188,7 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
           <div>
             Play solo or with friends (1-4 players)
             <br />
-            <span className="text-green-400 font-medium">Winners receive $100 USD</span> • Connect wallet to claim rewards
+            <span className="text-green-400 font-medium">Earn $25 USD per puzzle solved!</span> • Connect wallet to receive real money
           </div>
         </div>
       </motion.div>

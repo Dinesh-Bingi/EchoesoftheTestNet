@@ -139,10 +139,10 @@ const GameBoard: React.FC<GameBoardProps> = ({ onBackToLobby }) => {
                 </p>
                 <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4 mb-6">
                   <div className="text-2xl font-bold text-green-400">
-                    ${rewardAmount} USD
+                    $25 USD per puzzle
                   </div>
                   <div className="text-sm text-green-300">
-                    Reward Available
+                    Real money rewards!
                   </div>
                 </div>
                 <div className="space-y-3">

@@ -37,7 +37,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isHost, setIsHost] = useState(false);
   const [roomCode, setRoomCode] = useState<string>('');
   const [hasWon, setHasWon] = useState(false);
-  const [rewardAmount] = useState(100); // $100 USD reward
+  const [rewardAmount] = useState(25); // $25 USD per puzzle solved
 
   const createRoom = async () => {
     console.log('🏠 GameContext: createRoom function called');

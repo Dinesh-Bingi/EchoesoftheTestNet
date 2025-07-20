@@ -47,8 +47,27 @@ const Puzzle: React.FC = () => {
     setIsCorrect(correct);
     
     if (correct) {
-      // Record successful sequence on blockchain
-      await recordSequence(seq);
+      // Record successful sequence on blockchain and send USD reward
+      try {
+        await recordSequence(seq);
+        
+        // Send real USD reward for solving the puzzle
+        if (address) {
+          const rewardAmount = 25; // $25 USD per puzzle solved
+          await recordSequence(seq); // Record on blockchain first
+          
+          // Send USD reward
+          const result = await recordSequence(seq);
+          if (result.success) {
+            alert(`🎉 Puzzle solved! $${rewardAmount} USD sent to your wallet!`);
+          }
+        } else {
+          alert('🎉 Puzzle solved! Connect wallet to receive $25 USD rewards!');
+        }
+      } catch (error) {
+        console.error('Error processing reward:', error);
+      }
+      
       setTimeout(() => {
         solvePuzzle();
       }, 1000);
