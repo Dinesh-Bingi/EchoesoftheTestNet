@@ -30,6 +30,20 @@ const GameLobby: React.FC<GameLobbyProps> = ({ onStartGame }) => {
     console.log('📊 Current state before guest play:', { players: players.length, gameState });
     
     try {
+      // Missing implementation
+    } catch (error) {
+      console.error('❌ Error in guest play:', error);
+    }
+  };
+
+  const handleJoinRoom = async () => {
+    try {
+      await joinRoom(roomCode);
+    } catch (error) {
+      console.error('❌ Error joining room:', error);
+    }
+  };
+
   const handleStartGame = () => {
     console.log('handleStartGame called with', players.length, 'players');
     if (players.length >= 1) {
