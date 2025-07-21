@@ -1,4 +1,4 @@
-import MultisynqClient from '@multisynq/client';
+import { MultisynqClient } from '@multisynq/client';
 import { Position, PlayerAction, Player } from '../types/game';
 
 export class MultisynqService {
