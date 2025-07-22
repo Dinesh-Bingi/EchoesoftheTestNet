@@ -163,9 +163,8 @@ MIT License - Feel free to use this code for your own spooky blockchain games!
 ✅ **Real-time Multiplayer**: Serverless coordination via Multisynq
 ✅ **EVM Compatible**: Smart contracts on Monad Testnet
 
-## 🎮 Live Demo
-
-[Play Echoes of the Testnet](https://echoes-testnet.vercel.app) *(Coming Soon)*
+## Open This Link and Play To get Rewards
+https://echoesoftestnet.netlify.app/
 
 ---
 
